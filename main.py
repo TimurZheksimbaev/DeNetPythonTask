@@ -6,7 +6,7 @@ import os
 BASE_URL = "http://127.0.0.1:8000"
 
 DOWNLOADS_DIR = "downloads/"
-os.makedirs(DOWNLOADS_DIR, exist_ok=True, )
+os.makedirs(DOWNLOADS_DIR, exist_ok=True)
 
 
 # Click Group to manage multiple commands
