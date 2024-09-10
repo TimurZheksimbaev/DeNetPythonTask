@@ -5,9 +5,9 @@ import os
 # Set the base URL of the FastAPI server
 BASE_URL = "http://127.0.0.1:8000"
 
-DOWNLOADS_DIR = "/downloads/"
+DOWNLOADS_DIR = "downloads/"
 os.makedirs(DOWNLOADS_DIR, exist_ok=True, )
-os.makedirs()
+
 
 # Click Group to manage multiple commands
 @click.group()
@@ -18,8 +18,10 @@ def cli():
 
 # Register a new user command
 @cli.command()
-@click.argument("username")
-@click.argument("password")
+# @click.argument("username")
+# @click.argument("password")
+@click.option("--username", prompt="Enter your username", help="Your username")
+@click.option("--password", prompt="Enter your password", help="Your password")
 def register(username, password):
     """Register a new user on the server."""
     response = requests.post(f"{BASE_URL}/register", json={"username": username, "password": password})

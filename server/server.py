@@ -23,7 +23,23 @@ os.makedirs(UPLOAD_DIR, exist_ok=True)
     401: {"model": ErrorResponse, "description": "Unauthorized"},
     500: {"model": ErrorResponse, "description": "Internal server error"}
 })
-def register(user: RegisterUserRequest, db: Session = Depends(get_db)):
+def register(user: RegisterUserRequest, db: Session = Depends(get_db)) -> Dict[str, str]:
+    """ Register user ( creating a new user)
+        Parameters
+        ----------
+        user: RegisterUserRequest
+            user's name and password
+
+        Returns
+        -------
+        Dict[str, str]
+            message
+
+        Raises
+        ------
+        HTTPException
+            If user already exists, or failed registration
+        """
     try:
         return register_user(user.username, user.password, db)
     except Exception as e:
@@ -37,7 +53,23 @@ def register(user: RegisterUserRequest, db: Session = Depends(get_db)):
     401: {"model": ErrorResponse, "description": "Unauthorized"},
     500: {"model": ErrorResponse, "description": "Internal server error"}
 })
-async def upload_file(file: UploadFile = File(...), username: str = Depends(authenticate)):
+async def upload_file(file: UploadFile = File(...), username: str = Depends(authenticate)) -> Dict[str, str]:
+    """ Upload file
+        Parameters
+        ----------
+        file: File
+            file to upload
+
+        Returns
+        -------
+        Dict[str, str]
+            UploadResponse message
+
+        Raises
+        ------
+        HTTPException
+            If file upload failed
+        """
     file_path = os.path.join(UPLOAD_DIR, file.filename)
     try:
         with open(file_path, "wb") as f:
@@ -57,7 +89,23 @@ async def upload_file(file: UploadFile = File(...), username: str = Depends(auth
     404: {"model": ErrorResponse, "description": "File not found"},
     500: {"model": ErrorResponse, "description": "Internal server error"}
 })
-async def download_file(filename: str, username: str = Depends(authenticate)):
+async def download_file(filename: str, username: str = Depends(authenticate)) -> FileResponse:
+    """ Download file
+        Parameters
+        ----------
+        filename: str
+            file to download
+
+        Returns
+        -------
+        FileResponse
+            file response
+
+        Raises
+        ------
+        HTTPException
+            If file download failed
+        """
     file_path = os.path.join(UPLOAD_DIR, filename)
     if not os.path.exists(file_path):
         raise HTTPException(status_code=404, detail="File not found")
